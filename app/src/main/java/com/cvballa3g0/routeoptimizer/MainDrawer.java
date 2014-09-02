@@ -1,31 +1,26 @@
 package com.cvballa3g0.routeoptimizer;
 
-import android.app.Activity;
-
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 
-public class MainDrawer extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class MainDrawer extends Activity  implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
+    public static FragmentManager fragmentManager;
+
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -45,15 +40,31 @@ public class MainDrawer extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+        fragmentManager = getFragmentManager();
+
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
+        Fragment myFragment = null;
+        switch (position+1) {
+            case 1:
+                mTitle = getString(R.string.title_section1);
+                myFragment = PlaceholderFragment.newInstance(position + 1);
+                break;
+            case 2:
+                mTitle = getString(R.string.title_section2);
+                myFragment = new Map();
+                break;
+            case 3:
+                mTitle = getString(R.string.title_section3);
+                myFragment = new Directions();
+                break;
+        }
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
+        fragmentManager.beginTransaction().replace(R.id.container, myFragment ).commit();
+
     }
 
     public void onSectionAttached(int number) {
