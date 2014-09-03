@@ -51,7 +51,7 @@ public class Map  extends Fragment {
         mMap.setMyLocationEnabled(true);
         // For dropping a marker at a point on the Map
         // For zooming automatically to the Dropped PIN Location
-        mMap.setMapType(GoogleMap.MAP_TYPE_NONE);
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(39.8282, -98.5795), 6.0f));
     }
