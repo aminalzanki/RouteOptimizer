@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:padding="16dp"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/units_of_measurements"
+        android:id="@+id/unitsTextView"
+        android:layout_marginTop="36dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/travel_mode"
+        android:id="@+id/travelTextView"
+        android:layout_marginTop="90dp"
+        android:layout_below="@+id/unitsTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/avoid_textview"
+        android:id="@+id/avoidTextView"
+        android:layout_marginTop="61dp"
+        android:layout_below="@+id/radioGroup"
+        android:layout_alignLeft="@+id/radioGroup"
+        android:layout_alignStart="@+id/radioGroup" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tolls"
+        android:id="@+id/tollCheckBox"
+        android:layout_below="@+id/avoidTextView"
+        android:layout_alignLeft="@+id/avoidTextView"
+        android:layout_alignStart="@+id/avoidTextView"
+        android:checked="true" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Highways"
+        android:id="@+id/highwayCheckBox"
+        android:layout_alignBottom="@+id/tollCheckBox"
+        android:layout_toRightOf="@+id/tollCheckBox"
+        android:layout_toEndOf="@+id/tollCheckBox"
+        android:checked="true" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ferries"
+        android:id="@+id/ferryCheckBox"
+        android:layout_alignBottom="@+id/highwayCheckBox"
+        android:layout_toRightOf="@+id/highwayCheckBox"
+        android:layout_toEndOf="@+id/highwayCheckBox"
+        android:checked="true" />
+
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/unitsTextView"
+        android:orientation="horizontal">
+
+        <RadioButton android:id="@+id/radio_imperial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Imperial"
+            android:onClick="onRadioButtonClicked"
+            android:layout_below="@+id/unitsTextView"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:checked="true" />
+
+        <RadioButton android:id="@+id/radio_metric"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Metric"
+            android:onClick="onRadioButtonClicked"
+            android:layout_alignTop="@+id/radio_imperial"
+            android:layout_toLeftOf="@+id/ferryCheckBox"
+            android:layout_toStartOf="@+id/ferryCheckBox"
+            android:checked="false" />
+
+    </RadioGroup>
+
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/travelTextView"
+        android:orientation="horizontal"
+        android:id="@+id/radioGroup">
+
+        <RadioButton android:id="@+id/radio_driving"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Driving"
+            android:onClick="onRadioButtonClicked"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:checked="true" />
+
+        <RadioButton android:id="@+id/radio_walking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Walking"
+            android:onClick="onRadioButtonClicked"
+            android:layout_alignTop="@+id/radio_imperial"
+            android:layout_toLeftOf="@+id/ferryCheckBox"
+            android:layout_toStartOf="@+id/ferryCheckBox"
+            android:checked="false" />
+
+    </RadioGroup>
+
+    <RadioButton android:id="@+id/radio_bike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bicycling"
+        android:onClick="onRadioButtonClicked"
+        android:checked="false"
+        android:layout_below="@+id/radioGroup"
+        android:layout_alignRight="@+id/travelTextView"
+        android:layout_alignEnd="@+id/travelTextView" />
+
+    <RadioButton android:id="@+id/radio_transit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Transit"
+        android:onClick="onRadioButtonClicked"
+        android:checked="false"
+        android:layout_below="@+id/radioGroup"
+        android:layout_toRightOf="@+id/radio_bike"
+        android:layout_toEndOf="@+id/radio_bike" />
+
+
+</RelativeLayout>

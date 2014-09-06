@@ -21,6 +21,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile files('json-simple-1.1.1.jar')
     compile 'com.android.support:support-v4:20.0.0'
     compile 'com.google.android.gms:play-services:5.0+'
     compile 'com.google.code.gson:gson:2.2.4'

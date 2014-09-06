@@ -25,11 +25,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Start" />
-            <EditText
+            <AutoCompleteTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight=".85"
                 android:inputType="textAutoComplete"
+                android:id="@+id/startAddressAutoComplete"
                 android:hint="start address"
                 android:singleLine="true"  />
         </LinearLayout>
@@ -47,12 +48,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="End" />
-            <EditText
+            <AutoCompleteTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="end address"
                 android:inputType="textAutoComplete"
                 android:layout_weight=".80"
+                android:id="@+id/endAddressAutoComplete"
                 android:singleLine="true" />
             <CheckBox
                 android:layout_width="wrap_content"
@@ -72,19 +74,20 @@
             android:id="@+id/addLayout" >
 
 
-            <EditText
+            <AutoCompleteTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight=".70"
                 android:inputType="textAutoComplete"
                 android:hint="add a destination"
+                android:id="@+id/addAddressAutoComplete"
                 android:singleLine="true" />
             <Button
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:textColor="#ffffff"
                 android:hapticFeedbackEnabled="true"
-                android:background="@drawable/add_button"
+                android:background="@drawable/gradient_box"
                 android:text="Add"  />
         </LinearLayout>
 
