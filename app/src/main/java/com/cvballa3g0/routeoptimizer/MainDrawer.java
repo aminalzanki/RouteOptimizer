@@ -82,12 +82,8 @@ public class MainDrawer extends Activity implements NavigationDrawerFragment.Nav
                 }
                 break;
             case 4:
-                mTitle = getString(R.string.title_section4);
-                if (lastFragment != 4) {
-                    Intent intent = new Intent(this, Preferences.class);
-                    lastFragment = 4;
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(this, Preferences.class);
+                startActivity(intent);
                 break;
             case 5:
                 mTitle = getString(R.string.title_section5);

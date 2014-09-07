@@ -2,7 +2,10 @@ package com.cvballa3g0.routeoptimizer;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,32 +40,42 @@ public class Destinations extends Fragment {
     View view;
     DBAdapter MY_DB;
     static Context CONTEXT;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor spEditor;
+
+
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = (RelativeLayout) inflater.inflate(R.layout.fragment_main_drawer, container, false);
         openDB();
         populateListView();
         CONTEXT = getActivity();
+        sharedPreferences = CONTEXT.getSharedPreferences("RouteOptimizer", Context.MODE_PRIVATE);
+        spEditor = sharedPreferences.edit();
 
         // start address edittext
         final AutoCompleteTextView startCompView = (AutoCompleteTextView) view.findViewById(R.id.startAddressAutoComplete);
+        startCompView.setText(sharedPreferences.getString("startCompView", ""));
         startCompView.setAdapter(new PlacesAutoCompleteAdapter(getActivity(), R.layout.autocomplete_list));
         startCompView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView <?> adapterView, View view, int position, long id) {
-                String str = (String) adapterView.getItemAtPosition(position);
-                //addAddress(str);
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                String address = (String) adapterView.getItemAtPosition(position);
+                spEditor.putString("startCompView", address);
+                spEditor.commit();
             }
         });
 
         // end address edittext
         final AutoCompleteTextView endCompView = (AutoCompleteTextView) view.findViewById(R.id.endAddressAutoComplete);
+        endCompView.setText(sharedPreferences.getString("endCompView", ""));
         endCompView.setAdapter(new PlacesAutoCompleteAdapter(getActivity(), R.layout.autocomplete_list));
         endCompView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView <?> adapterView, View view, int position, long id) {
-                String str = (String) adapterView.getItemAtPosition(position);
-                //addAddress(str);
+                String address = (String) adapterView.getItemAtPosition(position);
+                spEditor.putString("endCompView",address);
+                spEditor.commit();
             }
         });
 
@@ -82,7 +95,6 @@ public class Destinations extends Fragment {
         Button addButton = (Button) view.findViewById(R.id.clearAllButton);
         addButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //addAddress(addCompView.getText().toString());
                 clearDB();
             }
         });
@@ -95,9 +107,11 @@ public class Destinations extends Fragment {
                     if (checkBoxSame.isChecked()) {
                         endCompView.setEnabled(false);
                         endCompView.setText(startCompView.getText().toString());
+                        spEditor.putString("endCompView",endCompView.getText().toString());
+                        spEditor.commit();
                     } else {
                         endCompView.setEnabled(true);
-                        endCompView.setText("");
+                        endCompView.setText(sharedPreferences.getString("endCompView", ""));
                     }
                 }
             });
@@ -109,12 +123,22 @@ public class Destinations extends Fragment {
 
                 Cursor cursor = MY_DB.getRow(id);
                 String address = cursor.getString(DBAdapter.COL_ADDRESS);
-                Toast.makeText(getActivity(),"You selected : " + address,Toast.LENGTH_LONG).show();
                 cursor.close();
+                String url = ("https://www.google.com/maps/place/" + address).replaceAll(" ", "+");
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
             }
         });
 
             return view;
+    }
+
+    private String getAddress(long id) {
+        Cursor cursor = MY_DB.getRow(id);
+        String address = cursor.getString(DBAdapter.COL_ADDRESS);
+        cursor.close();
+        return null;
     }
 
     public static void optimize() {

@@ -74,11 +74,5 @@ public class Map extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (mMap != null) {
-            MainDrawer.fragmentManager.beginTransaction()
-                      .remove(MainDrawer.fragmentManager
-                      .findFragmentById(R.id.map)).commit();
-            mMap = null;
-        }
     }
 }
