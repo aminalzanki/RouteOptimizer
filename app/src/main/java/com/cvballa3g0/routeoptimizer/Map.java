@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -16,16 +15,17 @@ import com.google.android.gms.maps.model.LatLng;
 public class Map extends Fragment {
 
     private static View view;
-
-
     private static GoogleMap mMap;
-    private static Double latitude, longitude;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = (RelativeLayout) inflater.inflate(R.layout.map_layout, container, false);
+        view = inflater.inflate(R.layout.map_layout, container, false);
         setUpMapIfNeeded(); // For setting up the MapFragment
         return view;
     }
+
+
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

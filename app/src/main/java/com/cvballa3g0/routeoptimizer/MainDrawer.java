@@ -152,7 +152,7 @@ public class MainDrawer extends Activity implements NavigationDrawerFragment.Nav
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.optimize_settings){
-            //optimize();
+            Destinations.optimize();
             return true;
         }
         return super.onOptionsItemSelected(item);

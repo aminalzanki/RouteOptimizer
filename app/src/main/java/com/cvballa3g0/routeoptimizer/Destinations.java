@@ -2,6 +2,7 @@ package com.cvballa3g0.routeoptimizer;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,11 +11,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ScrollView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -31,39 +35,59 @@ import java.util.ArrayList;
 
 public class Destinations extends Fragment {
     View view;
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = (ScrollView) inflater.inflate(R.layout.fragment_main_drawer, container, false);
+    DBAdapter MY_DB;
+    static Context CONTEXT;
 
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = (RelativeLayout) inflater.inflate(R.layout.fragment_main_drawer, container, false);
+        openDB();
+        populateListView();
+        CONTEXT = getActivity();
+
+        // start address edittext
         final AutoCompleteTextView startCompView = (AutoCompleteTextView) view.findViewById(R.id.startAddressAutoComplete);
         startCompView.setAdapter(new PlacesAutoCompleteAdapter(getActivity(), R.layout.autocomplete_list));
         startCompView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView <?> adapterView, View view, int position, long id) {
                 String str = (String) adapterView.getItemAtPosition(position);
-                Toast.makeText(getActivity(), str, Toast.LENGTH_SHORT).show();
+                //addAddress(str);
             }
         });
 
+        // end address edittext
         final AutoCompleteTextView endCompView = (AutoCompleteTextView) view.findViewById(R.id.endAddressAutoComplete);
         endCompView.setAdapter(new PlacesAutoCompleteAdapter(getActivity(), R.layout.autocomplete_list));
         endCompView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView <?> adapterView, View view, int position, long id) {
                 String str = (String) adapterView.getItemAtPosition(position);
-                Toast.makeText(getActivity(), str, Toast.LENGTH_SHORT).show();
+                //addAddress(str);
             }
         });
 
-        AutoCompleteTextView addCompView = (AutoCompleteTextView) view.findViewById(R.id.addAddressAutoComplete);
+        // add destination edittext
+        final AutoCompleteTextView addCompView = (AutoCompleteTextView) view.findViewById(R.id.addAddressAutoComplete);
         addCompView.setAdapter(new PlacesAutoCompleteAdapter(getActivity(), R.layout.autocomplete_list));
         addCompView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView <?> adapterView, View view, int position, long id) {
                 String str = (String) adapterView.getItemAtPosition(position);
-                Toast.makeText(getActivity(), str, Toast.LENGTH_SHORT).show();
+                addAddress(str);
+                addCompView.setText("");
             }
         });
 
+        // clear all button
+        Button addButton = (Button) view.findViewById(R.id.clearAllButton);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //addAddress(addCompView.getText().toString());
+                clearDB();
+            }
+        });
+
+        // same end as start checkbox
         final CheckBox checkBoxSame = (CheckBox) view.findViewById(R.id.sameStartCheckBox);
             checkBoxSame.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -77,11 +101,62 @@ public class Destinations extends Fragment {
                     }
                 }
             });
+        //destination listview
+        final ListView destListView = (ListView) view.findViewById(R.id.destinationListView);
+        destListView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+
+                Cursor cursor = MY_DB.getRow(id);
+                String address = cursor.getString(DBAdapter.COL_ADDRESS);
+                Toast.makeText(getActivity(),"You selected : " + address,Toast.LENGTH_LONG).show();
+                cursor.close();
+            }
+        });
 
             return view;
     }
 
+    public static void optimize() {
+        Toast.makeText(CONTEXT,"Optimize",Toast.LENGTH_LONG).show();
+    }
 
+    private void populateListView(){
+        Cursor cursor = MY_DB.getAllRows();
+
+        String[] addresses = new String[]{DBAdapter.KEY_ADDRESS};
+        int[] textViewID = new int[]{R.id.streetAddress};
+
+        SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(getActivity(),R.layout.destination_list, cursor,addresses,textViewID, 1);
+
+        ListView list = (ListView) view.findViewById(R.id.destinationListView);
+        list.setAdapter(cursorAdapter);
+    }
+
+    private void clearDB() {
+        MY_DB.deleteAll();
+        populateListView();
+    }
+
+    private void addAddress(String str) {
+        long myID = MY_DB.insertRow(str);
+        populateListView();
+    }
+
+    private void closeDB() {
+        MY_DB.close();
+    }
+
+    private void openDB() {
+        MY_DB = new DBAdapter(getActivity());
+        MY_DB.open();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        closeDB();
+    }
 
     private static final String API_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json";
     static String API_KEY = "AIzaSyBAedPwY87B__w9sUmzG2QEdKmhc5z7JSk";
@@ -134,6 +209,8 @@ public class Destinations extends Fragment {
 
         return resultList;
     }
+
+
 
 
     private static class PlacesAutoCompleteAdapter extends ArrayAdapter<String> implements Filterable {
