@@ -5,10 +5,8 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,24 +15,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-
 
 public class MainDrawer extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     private NavigationDrawerFragment mNavigationDrawerFragment;
     public static FragmentManager fragmentManager;
-    static String API_KEY = "AIzaSyARnvog5wasFol4h4XtfUbfRmcPm3BhW5k";
     public ArrayAdapter<String> autoCompleteAdapter;
     public AutoCompleteTextView textView;
     int lastFragment = -1;
@@ -60,85 +45,7 @@ public class MainDrawer extends Activity implements NavigationDrawerFragment.Nav
                 (DrawerLayout) findViewById(R.id.drawer_layout));
         fragmentManager = getFragmentManager();
 
-/*
-        autoCompleteAdapter = new ArrayAdapter<String>(this, R.layout.autocomplete_list);
-        textView = (AutoCompleteTextView) findViewById(R.id.addAddressAutoComplete);
-        autoCompleteAdapter.setNotifyOnChange(true);
-        textView.setAdapter(autoCompleteAdapter);
-        textView.addTextChangedListener(new TextWatcher() {
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (count % 3 == 1) {
-                    autoCompleteAdapter.clear();
-                    AutoCompleteResults task = new AutoCompleteResults();
-                    //now pass the argument in the textview to the task
-                    task.execute(textView.getText().toString());
-                }
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void afterTextChanged(Editable s) {
-            }
-        });
-*/
     }
-        class AutoCompleteResults extends AsyncTask<String, Void, ArrayList<String>>  {
-
-            @Override
-            protected ArrayList<String> doInBackground(String... args) {
-                ArrayList<String> resultArray = new ArrayList<String>();
-
-                try {
-                    URL googlePlaces = new URL(
-                            "https://maps.googleapis.com/maps/api/place/autocomplete/json?input="+ URLEncoder.encode(args[0].toString(), "UTF-8") +"&types=geocode&language=en&sensor=true&key=" + API_KEY);
-                    URLConnection urlConnection = googlePlaces.openConnection();
-                    BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-
-                    String data;
-                    StringBuffer sb = new StringBuffer();
-
-                    while ((data = in.readLine()) != null) {
-                        sb.append(data); // gets the json data to string
-                    }
-
-                    JSONObject predictions = new JSONObject(sb.toString());
-
-                    JSONArray jsonArray = new JSONArray(predictions.getString("predictions"));
-
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject jsonObj = (JSONObject) jsonArray.get(i);
-                        //add each entry to our array
-                        resultArray.add(jsonObj.getString("description"));
-                    }
-                } catch (IOException e){
-                    Log.e("GetAutoComplete", "IOException", e);
-                } catch (JSONException e) {
-                    Log.e("GetAutoComplete", "JSON Exception", e);
-                }
-
-                return resultArray;
-
-            }
-
-            @Override
-            protected void onPostExecute(ArrayList<String> result) {
-                Log.d("YourApp", "onPostExecute : " + result.size());
-                //update the adapter
-                autoCompleteAdapter = new ArrayAdapter<String>(getBaseContext(), R.layout.autocomplete_list);
-                autoCompleteAdapter.setNotifyOnChange(true);
-                //attach the adapter to textview
-                textView.setAdapter(autoCompleteAdapter);
-
-                for (String string : result) {
-                    autoCompleteAdapter.add(string);
-                    autoCompleteAdapter.notifyDataSetChanged();
-
-                }
-            }
-        }
-
 
 
 
@@ -153,7 +60,7 @@ public class MainDrawer extends Activity implements NavigationDrawerFragment.Nav
             case 1:
                 mTitle = getString(R.string.title_section1);
                 if (lastFragment != 1) {
-                    myFragment = PlaceholderFragment.newInstance(position + 1);
+                    myFragment = new Destinations();
                     lastFragment = 1;
                     switchFragment = true;
                 }
@@ -244,9 +151,7 @@ public class MainDrawer extends Activity implements NavigationDrawerFragment.Nav
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        } else if (id == R.id.optimize_settings){
+        if (id == R.id.optimize_settings){
             //optimize();
             return true;
         }

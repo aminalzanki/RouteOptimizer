@@ -26,13 +26,13 @@
                 android:layout_height="wrap_content"
                 android:text="Start" />
             <AutoCompleteTextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".85"
                 android:inputType="textAutoComplete"
                 android:id="@+id/startAddressAutoComplete"
                 android:hint="start address"
-                android:singleLine="true"  />
+                android:singleLine="true" />
         </LinearLayout>
 
         <LinearLayout
@@ -57,9 +57,9 @@
                 android:id="@+id/endAddressAutoComplete"
                 android:singleLine="true" />
             <CheckBox
-                android:layout_width="wrap_content"
+                android:layout_width="108dp"
                 android:layout_height="wrap_content"
-                android:layout_weight=".05"
+                android:id="@+id/sameStartCheckBox"
                 android:textSize="12dp"
                 android:text="Same as start"/>
         </LinearLayout>
@@ -78,7 +78,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight=".70"
-                android:inputType="textAutoComplete"
                 android:hint="add a destination"
                 android:id="@+id/addAddressAutoComplete"
                 android:singleLine="true" />
@@ -87,8 +86,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="#ffffff"
                 android:hapticFeedbackEnabled="true"
-                android:background="@drawable/gradient_box"
-                android:text="Add"  />
+                android:background="@drawable/add_button"
+                android:text="Add" />
         </LinearLayout>
 
         <LinearLayout
