@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -20,6 +21,7 @@ import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
@@ -131,7 +133,39 @@ public class Destinations extends Fragment {
             }
         });
 
-            return view;
+        destListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View view, final int position, long arg3) {
+                PopupMenu popupMenu = new PopupMenu(getActivity().getApplicationContext(), view);
+                popupMenu.getMenuInflater().inflate(R.menu.main_drawer, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        onContextItemSelected(item, position);
+                        return false;
+                    }
+                });
+                popupMenu.show();
+                return false;
+            }
+        });
+
+        destListView.smoothScrollBy(1,1); //fix to stop from viewing Issue when longclicking
+
+
+        return view;
+    }
+
+    public boolean onContextItemSelected(MenuItem item, int position) {
+        int id = item.getItemId();
+
+        if (id == R.id.optimize_settings) {
+            optimize();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private String getAddress(long id) {
@@ -233,9 +267,6 @@ public class Destinations extends Fragment {
 
         return resultList;
     }
-
-
-
 
     private static class PlacesAutoCompleteAdapter extends ArrayAdapter<String> implements Filterable {
         private ArrayList<String> resultList;
